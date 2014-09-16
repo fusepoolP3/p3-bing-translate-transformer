@@ -1,4 +1,4 @@
-package eu.fusepoolp3.bingtranslate;
+package eu.fusepool.p3.transformer.bingtranslate;
 
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;

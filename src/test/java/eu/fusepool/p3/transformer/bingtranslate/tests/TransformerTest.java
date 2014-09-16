@@ -1,9 +1,9 @@
-package eu.fusepoolp3.bingtranslate.tests;
+package eu.fusepool.p3.transformer.bingtranslate.tests;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
+import eu.fusepool.p3.transformer.bingtranslate.BingTranslateTransformer;
 import eu.fusepool.p3.transformer.server.TransformerServer;
-import eu.fusepoolp3.bingtranslate.BingTranslateTransformer;
 import java.net.ServerSocket;
 import java.util.Iterator;
 import org.apache.clerezza.rdf.core.BNode;

@@ -1,4 +1,4 @@
-package eu.fusepoolp3.bingtranslate;
+package eu.fusepool.p3.transformer.bingtranslate;
 
 import eu.fusepool.p3.transformer.server.TransformerServer;
 import java.io.FileInputStream;

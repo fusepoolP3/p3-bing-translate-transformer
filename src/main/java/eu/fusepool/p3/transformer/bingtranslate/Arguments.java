@@ -1,4 +1,4 @@
-package eu.fusepoolp3.bingtranslate;
+package eu.fusepool.p3.transformer.bingtranslate;
 
 import org.wymiwyg.commons.util.arguments.ArgumentsWithHelp;
 import org.wymiwyg.commons.util.arguments.CommandLine;
