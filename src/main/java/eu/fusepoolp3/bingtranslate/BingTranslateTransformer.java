@@ -27,12 +27,12 @@ import org.apache.commons.lang.StringUtils;
  */
 public class BingTranslateTransformer extends RdfGeneratingTransformer {
     
-    final private String ClienId;
-    final private String ClientSectret;
+    final private String clienId;
+    final private String clientSectret;
 
-    public BingTranslateTransformer(String ClienId, String ClientSectret) {
-        this.ClienId = ClienId;
-        this.ClientSectret = ClientSectret;
+    public BingTranslateTransformer(String clienId, String clientSectret) {
+        this.clienId = clienId;
+        this.clientSectret = clientSectret;
     }
 
     @Override
@@ -54,8 +54,8 @@ public class BingTranslateTransformer extends RdfGeneratingTransformer {
         start = System.currentTimeMillis();
 
         // set client id and secret
-        Translate.setClientId(ClienId);
-        Translate.setClientSecret(ClientSectret);
+        Translate.setClientId(clienId);
+        Translate.setClientSecret(clientSectret);
 
         // language string to translate from
         String from = queryParams.get("from");
