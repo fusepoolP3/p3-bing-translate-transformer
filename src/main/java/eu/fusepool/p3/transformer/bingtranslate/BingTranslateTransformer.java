@@ -3,21 +3,21 @@ package eu.fusepool.p3.transformer.bingtranslate;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 import eu.fusepool.p3.transformer.HttpRequestEntity;
-import eu.fusepool.p3.transformer.RdfGeneratingTransformer;
+import eu.fusepool.p3.transformer.SyncTransformer;
+import eu.fusepool.p3.transformer.TransformerException;
+import eu.fusepool.p3.transformer.commons.Entity;
+import eu.fusepool.p3.transformer.commons.util.WritingEntity;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
-import org.apache.clerezza.rdf.core.BNode;
-import org.apache.clerezza.rdf.core.TripleCollection;
-import org.apache.clerezza.rdf.core.UriRef;
-import org.apache.clerezza.rdf.core.impl.SimpleMGraph;
-import org.apache.clerezza.rdf.ontologies.RDF;
-import org.apache.clerezza.rdf.ontologies.SIOC;
-import org.apache.clerezza.rdf.utils.GraphNode;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -25,8 +25,8 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author Gabor
  */
-public class BingTranslateTransformer extends RdfGeneratingTransformer {
-    
+public class BingTranslateTransformer implements SyncTransformer {
+
     final private String clienId;
     final private String clientSectret;
 
@@ -36,18 +36,16 @@ public class BingTranslateTransformer extends RdfGeneratingTransformer {
     }
 
     @Override
-    protected TripleCollection generateRdf(HttpRequestEntity entity) throws IOException {
+    public Entity transform(final HttpRequestEntity entity) throws IOException {
         final String queryString = entity.getRequest().getQueryString();
         final String original = IOUtils.toString(entity.getData(), "UTF-8");
-        final TripleCollection result = new SimpleMGraph();
-        final GraphNode node = new GraphNode(new BNode(), result);
 
         // get query params from query string
         Map<String, String> queryParams = getQueryParams(queryString);
 
         // query string must not be empty
         if (queryParams.isEmpty()) {
-            throw new RuntimeException("Query string must not be empty!");
+            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: Query string must not be empty!\nUsage: http://<bing_transformer>/?from=<from_language>&to=<to_language>");
         }
 
         long start, end;
@@ -72,11 +70,11 @@ public class BingTranslateTransformer extends RdfGeneratingTransformer {
         // language to translate to
         Language toLanguage = Language.fromString(to);
         if (toLanguage == null) {
-            throw new RuntimeException("No language was supplied to translate to!");
+            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: No language was supplied to translate to!\nUsage: http://<bing_transformer>/?from=<from_language>&to=<to_language>");
         }
 
         // translated text
-        String translation;
+        final String translation;
 
         if (original != null && !original.isEmpty()) {
             // translate original text
@@ -88,22 +86,33 @@ public class BingTranslateTransformer extends RdfGeneratingTransformer {
                 end = System.currentTimeMillis();
                 System.out.println(" done [" + Double.toString((double) (end - start) / 1000) + " sec] .");
 
-                node.addProperty(RDF.type, new UriRef("http://example.org/ontology#LanguageAnnotation"));
-                node.addPropertyValue(SIOC.content, translation);
-                node.addPropertyValue(new UriRef("http://example.org/ontology#textLength"), translation.length());
+//                node.addProperty(RDF.type, new UriRef("http://example.org/ontology#LanguageAnnotation"));
+//                node.addPropertyValue(SIOC.content, translation);
+//                node.addPropertyValue(new UriRef("http://example.org/ontology#textLength"), translation.length());
+                return new WritingEntity() {
+                    @Override
+                    public MimeType getType() {
+                        return entity.getType();
+                    }
+
+                    @Override
+                    public void writeData(OutputStream outputStream) throws IOException {
+                        IOUtils.copy((InputStream) new ByteArrayInputStream(translation.getBytes()), outputStream);
+                    }
+                };
 
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
+        } else {
+            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: No input data was supplied!");
         }
-
-        return result;
     }
 
     @Override
     public Set<MimeType> getSupportedInputFormats() {
         try {
-            MimeType mimeType = new MimeType("text/plain");  
+            MimeType mimeType = new MimeType("text/plain");
             return Collections.singleton(mimeType);
         } catch (MimeTypeParseException ex) {
             throw new RuntimeException(ex);
@@ -113,7 +122,7 @@ public class BingTranslateTransformer extends RdfGeneratingTransformer {
     @Override
     public Set<MimeType> getSupportedOutputFormats() {
         try {
-            MimeType mimeType = new MimeType("text/turtle");
+            MimeType mimeType = new MimeType("text/plain");
             return Collections.singleton(mimeType);
         } catch (MimeTypeParseException ex) {
             throw new RuntimeException(ex);
@@ -132,16 +141,20 @@ public class BingTranslateTransformer extends RdfGeneratingTransformer {
      * @return HashMap containing the query parameters
      */
     private Map<String, String> getQueryParams(String queryString) {
-        Map<String, String> temp = new HashMap<>();
-        // query string should not be empty or blank
-        if (StringUtils.isNotBlank(queryString)) {
-            String[] params = queryString.split("&");
-            String[] param;
-            for (int i = 0; i < params.length; i++) {
-                param = params[i].split("=", 2);
-                temp.put(param[0], param[1]);
+        try {
+            Map<String, String> temp = new HashMap<>();
+            // query string should not be empty or blank
+            if (StringUtils.isNotBlank(queryString)) {
+                String[] params = queryString.split("&");
+                String[] param;
+                for (String item : params) {
+                    param = item.split("=", 2);
+                    temp.put(param[0], param[1]);
+                }
             }
+            return temp;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: Failed to parse query string!\nUsage: http://<bing_transformer>/?from=<from_language>&to=<to_language>");
         }
-        return temp;
     }
 }

@@ -2,13 +2,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
   
-    <groupId>eu.fusepoolp3</groupId>
+    <groupId>eu.fusepool.p3</groupId>
     <artifactId>bing-translate</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <name>Fusepool P3 Platform: Bing Translate</name>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Fusepool P3 Platform: Bing Translate</name>
-
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <main.class>eu.fusepool.p3.transformer.bingtranslate.Main</main.class>
+    </properties>
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -74,7 +80,6 @@
     </build>
 
     <dependencies>
-      
         <dependency>
             <groupId>com.memetix</groupId>
             <artifactId>microsoft-translator-java-api</artifactId>
@@ -94,7 +99,7 @@
         <dependency>
             <groupId>eu.fusepool.p3</groupId>
             <artifactId>transformer-implementation-library</artifactId>
-            <version>1.0.0</version>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -132,10 +137,4 @@
             <url>http://repository.apache.org/snapshots</url>
         </repository>
     </repositories>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <main.class>eu.fusepool.p3.transformer.bingtranslate.Main</main.class>
-    </properties>
 </project>

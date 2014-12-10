@@ -20,8 +20,8 @@ public class Main {
     private static void start(Arguments arguments) throws Exception {
         final String clienId;
         final String clientSectret;
-        
-        TransformerServer server = new TransformerServer(arguments.getPort());
+
+        TransformerServer server = new TransformerServer(arguments.getPort(), arguments.enableCors());
 
         // if client id and client secret was supplied from commandline use that
         if (!StringUtils.isEmpty(arguments.getClientId()) && !StringUtils.isEmpty(arguments.getClientSecret())) {
