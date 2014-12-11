@@ -86,9 +86,6 @@ public class BingTranslateTransformer implements SyncTransformer {
                 end = System.currentTimeMillis();
                 System.out.println(" done [" + Double.toString((double) (end - start) / 1000) + " sec] .");
 
-//                node.addProperty(RDF.type, new UriRef("http://example.org/ontology#LanguageAnnotation"));
-//                node.addPropertyValue(SIOC.content, translation);
-//                node.addPropertyValue(new UriRef("http://example.org/ontology#textLength"), translation.length());
                 return new WritingEntity() {
                     @Override
                     public MimeType getType() {
