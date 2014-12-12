@@ -1,25 +1,41 @@
 Bing Translate Transformer
 =============================
-Bing Translate is P3 transformer for language translation. The transformer uses the Microsoft Translator via its API to translate text data. Accessing the API requires a Client ID and a Client Secret.
+The Bing Translate Transformer is a machine language translator that uses the Microsoft Translator via its API to translate text from one language to another. Accessing the API requires a Client ID and a Client Secret which can be obtained from Windows Azure Marketplace.
 
-###Install
+The Client ID and the Client Secret must be supplied either as environmental variable or as command line arguments. (See the Install and run section.)
 
-To clone the repository to your local machine
+###Install and run
 
-    git clone https://github.com/fusepoolP3/p3-bing-translate-transfromer.git
+Create the following two environmental variables (optional)
 
-Compile and run with
+    P3_BT_CI – client ID
+    P3_BT_CS – client secret
 
-    mvn clean install exec:java
+Compiled the source code and run the application with
+
+    mvn clean install exec:java -Dexec.args="-CI <client_id> -CS <client_secret> -P 7100 -C"
+
+`-CI` client ID (required if not set as environmental variable)
+
+`-CS` client secret (required if not set as environmental variable)
+
+`-P`  sets the port (optional)
+
+###Usage
+
+The transformer only supports `text/plain` as input type, and it produces `text/plain` as output.
+
+    curl -X GET "http://localhost:7100/"
+    <http://localhost:7101/>
+          <http://vocab.fusepool.info/transformer#supportedInputFormat>
+                  "text/plain"^^<http://www.w3.org/2001/XMLSchema#string> ;
+          <http://vocab.fusepool.info/transformer#supportedOutputFormat>
+                  "text/plain"^^<http://www.w3.org/2001/XMLSchema#string> .
+
+To invoke the transformer with text to translate use
     
-Example invocation with curl
-    
-    $ curl -X POST -d @file.txt "http://localhost:7102/?from=de&to=en"
-    []    a       <http://example.org/ontology#LanguageAnnotation> ;
-      <http://example.org/ontology#textLength>
-              "16"^^<http://www.w3.org/2001/XMLSchema#int> ;
-      <http://rdfs.org/sioc/ns#content>
-              "Translated text."^^<http://www.w3.org/2001/XMLSchema#string> .
+    $ curl -X POST -d "Sia a nord che a est la Toscana  circondata dagli Appenninima il territorio  prevalentemente collinare." "http://localhost:7100/?from=it&to=en"
+    To the North and East the Tuscany surrounded by the Apennines but mostly hilly territory.
 
 ###How to get Cleint ID and Client Secret
 
