@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
   
     <groupId>eu.fusepool.p3</groupId>
-    <artifactId>bing-translate</artifactId>
+    <artifactId>p3-bing-translate</artifactId>
     <name>Fusepool P3 Platform: Bing Translate</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -13,9 +13,11 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <main.class>eu.fusepool.p3.transformer.bingtranslate.Main</main.class>
+        <finalName>${project.artifactId}-${project.version}</finalName>
     </properties>
     
     <build>
+        <finalName>${finalName}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -111,13 +113,6 @@
             <groupId>com.jayway.restassured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>2.3.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.clerezza</groupId>
-            <artifactId>rdf.jena.parser</artifactId>
-            <version>0.12</version>
-            <!-- only in tests and only at runtime -->
             <scope>test</scope>
         </dependency>
         <dependency>
