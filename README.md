@@ -1,6 +1,6 @@
 Bing Translate Transformer
 =============================
-The Bing Translate Transformer is a machine language translator that uses the Microsoft Translator via its API to translate text from one language to another. Accessing the API requires a Client ID and a Client Secret which can be obtained from Windows Azure Marketplace.
+The Bing Translate Transformer is a machine language translator that uses the Microsoft Translator via its API to translate text from one language to another. Accessing the API requires a Client ID and a Client Secret which can be obtained from Windows Azure Marketplace (see section "How to get Client ID and Client Secret").
 
 The Client ID and the Client Secret must be supplied either as environmental variable or as command line arguments. (See the Install and run section.)
 
@@ -37,7 +37,7 @@ To invoke the transformer with text to translate use
     $ curl -X POST -d "Sia a nord che a est la Toscana  circondata dagli Appenninima il territorio  prevalentemente collinare." "http://localhost:7100/?from=it&to=en"
     To the North and East the Tuscany surrounded by the Apennines but mostly hilly territory.
 
-###How to get Cleint ID and Client Secret
+###How to get Client ID and Client Secret
 
 To gain access to Microsoft Translator API, you need to do the following steps:
  1. Register for an account on Windows Azure Marketplace.
