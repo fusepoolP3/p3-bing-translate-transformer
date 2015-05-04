@@ -12,7 +12,7 @@ Create the following two environmental variables (optional)
 
 Compiled the source code and run the application with
 
-    mvn clean install exec:java -Dexec.args="-CI <client_id> -CS <client_secret> -P 7100 -C"
+    mvn clean install exec:java -Dexec.args="-CI <client_id> -CS <client_secret> -P 8309 -C"
 
 `-CI` client ID (required if not set as environmental variable)
 
@@ -24,8 +24,8 @@ Compiled the source code and run the application with
 
 The transformer only supports `text/plain` as input type, and it produces `text/plain` as output.
 
-    curl -X GET "http://localhost:7100/"
-    <http://localhost:7101/>
+    curl -X GET "http://localhost:8309/"
+    <http://localhost:8309/>
           <http://vocab.fusepool.info/transformer#supportedInputFormat>
                   "text/plain"^^<http://www.w3.org/2001/XMLSchema#string> ;
           <http://vocab.fusepool.info/transformer#supportedOutputFormat>
@@ -33,7 +33,7 @@ The transformer only supports `text/plain` as input type, and it produces `text/
 
 To invoke the transformer with text to translate use
     
-    $ curl -X POST --data-binary "Sia a nord che a est la Toscana  circondata dagli Appenninima il territorio  prevalentemente collinare." "http://localhost:7100/?from=it&to=en"
+    $ curl -X POST --data-binary "Sia a nord che a est la Toscana  circondata dagli Appenninima il territorio  prevalentemente collinare." "http://localhost:8309/?from=it&to=en"
     To the North and East the Tuscany surrounded by the Apennines but mostly hilly territory.
 
 ## How to get Client ID and Client Secret
