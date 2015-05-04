@@ -1,0 +1,11 @@
+language: java
+before_install: mvn install -DskipTests=true -DfinalName=bing-translate-transformer-$TRAVIS_TAG
+deploy:
+  provider: releases
+  api_key:
+    secure: zeF9DVEQbGHKzgvVtZhCOCG4/qO6UUoOcpZ6eFvGcE0xmrAX5yekTjhiXSoEvdnKqWNSVnIabJhOwjueww4JsaG6lIZPXgcQ19uiWt7XlTpJUDI8NOiR3/cZakjh4DnzvyhnvJBeJdt5sjttgw9P4aUSbfvCvoqR99DSrIzGZGc=
+  file: target/bing-translate-transformer-$TRAVIS_TAG-jar-with-dependencies.jar
+  on:
+    repo: fusepoolP3/p3-bing-translate-transformer
+    tags: true
+    all_branches: true
