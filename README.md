@@ -1,4 +1,4 @@
-# Bing Translate Transformer
+# Bing Translate Transformer [![Build Status](https://travis-ci.org/fusepoolP3/p3-bing-translate-transformer.svg)](https://travis-ci.org/fusepoolP3/p3-bing-translate-transformer)
 The Bing Translate Transformer is a machine language translator that uses the Microsoft Translator via its API to translate text from one language to another. Accessing the API requires a Client ID and a Client Secret which can be obtained from Windows Azure Marketplace (see section "How to get Client ID and Client Secret").
 
 The Client ID and the Client Secret must be supplied either as environmental variable or as command line arguments. (See the Install and run section.)
