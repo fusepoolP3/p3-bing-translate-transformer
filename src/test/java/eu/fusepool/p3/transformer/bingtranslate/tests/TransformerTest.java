@@ -5,7 +5,11 @@ import com.jayway.restassured.response.Response;
 import eu.fusepool.p3.transformer.bingtranslate.BingTranslateTransformer;
 import eu.fusepool.p3.transformer.server.TransformerServer;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
+import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
@@ -18,9 +22,9 @@ import org.junit.Test;
  */
 public class TransformerTest {
 
-    final private String clienId = "FP3JavaTranslator";
+    final private String clientId = "FP3JavaTranslator";
 
-    final private String clienSecret = "lFGMlv3EI7cmjPCKOpQrwbqJw0B7lTqBd3OvuJ9kzs4=";
+    final private String clientSecret = "lFGMlv3EI7cmjPCKOpQrwbqJw0B7lTqBd3OvuJ9kzs4=";
 
     final private String testText = "Die NASA wurde am 29. Juli 1958 durch den „National Aeronautics and Space Act“ gegründet. Damit wurde durch Präsident Dwight D. Eisenhower auf den Rat seines Wissenschaftsberaters James Killian entschieden, dass das zivile Raumfahrtprogramm durch eine Raumfahrtorganisation durchgeführt werden soll. Vorläufer war u.a. das National Advisory Committee for Aeronautics, das der Luftwaffe unterstand. Die neue Behörde nahm am 1. Oktober 1958 ihre Arbeit auf, wobei sie die circa 8.000 Angestellten der NACA übernahm. Zum ersten Administrator der NASA wurde Thomas Keith Glennan ernannt.";
 
@@ -31,7 +35,7 @@ public class TransformerTest {
         final int port = findFreePort();
         baseURI = "http://localhost:" + port + "/";
         TransformerServer server = new TransformerServer(port, false);
-        server.start(new BingTranslateTransformer(clienId, clienSecret));
+        server.start(new BingTranslateTransformer());
     }
 
     @Test
@@ -47,7 +51,7 @@ public class TransformerTest {
                 .contentType("text/plain; charset=UTF-8")
                 .content(testText)
                 .expect().statusCode(HttpStatus.SC_OK).header("Content-Type", "text/plain; charset=UTF-8").when()
-                .post(baseURI + "?from=de&to=en");
+                .post(baseURI + "?client-id=" + clientId + "&client-secret=" + clientSecret + "&from=de&to=en");
         try {
             String translation = IOUtils.toString(response.getBody().asInputStream(), "UTF-8");
             Assert.assertFalse("Response contained no text.", StringUtils.isEmpty(translation));

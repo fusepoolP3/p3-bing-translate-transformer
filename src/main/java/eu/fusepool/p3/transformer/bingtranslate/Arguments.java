@@ -14,12 +14,4 @@ public interface Arguments extends ArgumentsWithHelp {
             description = "Enable a liberal CORS policy",
             isSwitch = true)
     public boolean enableCors();
-
-    @CommandLine(longName = "client_id", shortName = {"CI"}, required = false,
-            description = "The client id for the Microsoft Translator API")
-    public String getClientId();
-
-    @CommandLine(longName = "client_secret", shortName = {"CS"}, required = false,
-            description = "The client secret for the Microsoft Translator API")
-    public String getClientSecret();
 }

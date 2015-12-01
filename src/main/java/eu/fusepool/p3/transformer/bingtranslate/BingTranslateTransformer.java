@@ -11,10 +11,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import javax.servlet.http.HttpServletResponse;
@@ -27,14 +31,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public class BingTranslateTransformer implements SyncTransformer {
 
-    final private String clienId;
-    final private String clientSectret;
-
-    public BingTranslateTransformer(String clienId, String clientSectret) {
-        this.clienId = clienId;
-        this.clientSectret = clientSectret;
-    }
-
     @Override
     public Entity transform(final HttpRequestEntity entity) throws IOException {
         final String queryString = entity.getRequest().getQueryString();
@@ -45,14 +41,20 @@ public class BingTranslateTransformer implements SyncTransformer {
 
         // query string must not be empty
         if (queryParams.isEmpty()) {
-            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: Query string must not be empty!\nUsage: http://<bing_transformer>/?from=<from_language>&to=<to_language>");
+            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: Query string must not be empty!\nUsage: http://<bing_transformer>/?client-id=<client-id>&client-secret=<client-secret>&from=<from_language>&to=<to_language>");
         }
 
         long start, end;
         start = System.currentTimeMillis();
 
+        String clientId = queryParams.get("client-id");
+        String clientSectret = queryParams.get("client-secret");
+
+        System.out.println(clientId);
+        System.out.println(clientSectret);
+
         // set client id and secret
-        Translate.setClientId(clienId);
+        Translate.setClientId(clientId);
         Translate.setClientSecret(clientSectret);
 
         // language string to translate from
@@ -70,7 +72,7 @@ public class BingTranslateTransformer implements SyncTransformer {
         // language to translate to
         Language toLanguage = Language.fromString(to);
         if (toLanguage == null) {
-            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: No language was supplied to translate to!\nUsage: http://<bing_transformer>/?from=<from_language>&to=<to_language>");
+            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: No language was supplied to translate to!\nUsage: http://<bing_transformer>/?client-id=<client-id>&client-secret=<client-secret>&from=<from_language>&to=<to_language>");
         }
 
         // translated text
@@ -146,12 +148,16 @@ public class BingTranslateTransformer implements SyncTransformer {
                 String[] param;
                 for (String item : params) {
                     param = item.split("=", 2);
-                    temp.put(param[0], param[1]);
+                    temp.put(param[0], URLDecoder.decode(param[1], "UTF-8"));
+                    System.out.println(param[0] + " - " + param[1]);
+                    System.out.println(param[0] + " - " + URLDecoder.decode(param[1], "UTF-8"));
                 }
             }
             return temp;
         } catch (ArrayIndexOutOfBoundsException ex) {
-            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: Failed to parse query string!\nUsage: http://<bing_transformer>/?from=<from_language>&to=<to_language>");
+            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: Failed to parse query string!\nUsage: http://<bing_transformer>/?client-id=<client-id>&client-secret=<client-secret>&from=<from_language>&to=<to_language>");
+        } catch (UnsupportedEncodingException ex) {
+            throw new TransformerException(HttpServletResponse.SC_BAD_REQUEST, "ERROR: Failed to URL decode query string parameter!\nUsage: http://<bing_transformer>/?client-id=<client-id>&client-secret=<client-secret>&from=<from_language>&to=<to_language>");
         }
     }
 }
