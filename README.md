@@ -1,24 +1,17 @@
 # Bing Translate Transformer [![Build Status](https://travis-ci.org/fusepoolP3/p3-bing-translate-transformer.svg)](https://travis-ci.org/fusepoolP3/p3-bing-translate-transformer)
 The Bing Translate Transformer is a machine language translator that uses the Microsoft Translator via its API to translate text from one language to another. Accessing the API requires a Client ID and a Client Secret which can be obtained from Windows Azure Marketplace (see section "How to get Client ID and Client Secret").
 
-The Client ID and the Client Secret must be supplied either as environmental variable or as command line arguments. (See the Install and run section.)
+The Client ID and the Client Secret must be supplied each time the transformer is called as query string parameters.
 
 ## Compiling and Running
 
-Create the following two environmental variables (optional)
-
-    P3_BT_CI – client ID
-    P3_BT_CS – client secret
-
 Compiled the source code and run the application with
 
-    mvn clean install exec:java -Dexec.args="-CI <client_id> -CS <client_secret> -P 8309 -C"
-
-`-CI` client ID (required if not set as environmental variable)
-
-`-CS` client secret (required if not set as environmental variable)
+    mvn clean install exec:java -Dexec.args="-P 8309 -C"
 
 `-P`  sets the port (optional)
+
+`-C`  CORS enabled (optional)
 
 ## Usage
 
@@ -33,7 +26,7 @@ The transformer only supports `text/plain` as input type, and it produces `text/
 
 To invoke the transformer with text to translate use
     
-    $ curl -X POST --data-binary "Sia a nord che a est la Toscana  circondata dagli Appenninima il territorio  prevalentemente collinare." "http://localhost:8309/?from=it&to=en"
+    $ curl -X POST --data-binary "Sia a nord che a est la Toscana  circondata dagli Appenninima il territorio  prevalentemente collinare." "http://localhost:8309/?client-id=<...>&client-secret=<...>&from=it&to=en"
     To the North and East the Tuscany surrounded by the Apennines but mostly hilly territory.
 
 ## How to get Client ID and Client Secret
